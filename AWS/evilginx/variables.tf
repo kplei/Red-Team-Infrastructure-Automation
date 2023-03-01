@@ -15,9 +15,9 @@ variable "instance_type" {
 
 variable "security_group_id" {
   type    = list(any)
-  default = ["sg-1", "sg-2"]
+  default = ["<sg-1>", "<sg-2>"]
 }
 
 variable "key_name" {
-  default = "public-key"
+  default = "<public-key>"
 }

